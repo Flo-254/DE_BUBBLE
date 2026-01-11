@@ -15,7 +15,7 @@ const max_vibration_duration = 150; // max dauer in millisekunden
 
 //Themen
 const THEMES = [
-    { title: "Klima", statement: "Ich brauche keine Verbote.", id: 'klima' },
+    { title: "Klimaaa", statement: "Ich brauche keine Verbote.", id: 'klima' },
     { title: "Verkehr", statement: "Das Auto ist Freiheit.", id: 'verkehr' },
     { title: "Ernährung", statement: "Jeder soll essen, was er will.", id: 'ernaehrung' },
     { title: "Konsum", statement: "Wirtschaftswachstum muss sein.", id: 'konsum' },
