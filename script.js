@@ -1,12 +1,8 @@
-/**
- * DE.BUBBLE - Interaktions-Logik
- */
-
-// --- 1. Audio Setup (Web Audio API) ---
+//Audio-Setup
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
 function playSound(type) {
-    // Browser-Sicherheitscheck: AudioContext aktivieren
+    //AudioContext aktivieren
     if (audioCtx.state === 'suspended') audioCtx.resume();
 
     const oscillator = audioCtx.createOscillator();
@@ -14,7 +10,7 @@ function playSound(type) {
     oscillator.type = 'sine';
 
     if (type === 'pop') {
-        // Tieferer Plopp-Sound
+        // Tieferer Plopp-Sound > Bubble zerplatzt
         oscillator.frequency.setValueAtTime(150, audioCtx.currentTime);
         oscillator.frequency.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
         gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
@@ -36,7 +32,7 @@ function playSound(type) {
     }
 }
 
-// --- 2. Globale Variablen & DOM-Elemente ---
+//Globale Variablen
 const bubble = document.getElementById('bubble');
 const bubbleContainer = document.getElementById('bubble-container');
 const bubbleText = document.getElementById('bubble-text');
@@ -54,7 +50,7 @@ const THEMES = [
     { title: "Konsum", statement: "Wirtschaftswachstum muss sein." }
 ];
 
-// --- 3. Initialisierung ---
+//EventListner
 document.addEventListener("DOMContentLoaded", () => {
     if (bubbleContainer) {
         // Wichtig: passive: false erlaubt e.preventDefault() für flüssige Touches
@@ -66,7 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
     loadSelectionScreen();
 });
 
-// --- 4. Navigation & UI Logik ---
+//Navigation
 function loadSelectionScreen() {
     flashActive = false;
     if (selectionScreen) selectionScreen.style.display = "flex";
@@ -100,12 +96,12 @@ function startBubbleMode(index) {
 
     if (bubbleText) {
         bubbleText.textContent = THEMES[index].statement;
-        // FIX: Sicherstellen, dass der Text wieder voll sichtbar ist
+        //damit Text auch bei Wiederholung sichtbar bleibt
         gsap.set(bubbleText, { opacity: 1 });
     }
 
     if (bubble) {
-        // FIX: Wir setzen opacity: 1 und löschen alle alten Animations-Reste
+        //alte Animationen löschen, für Wdh
         gsap.set(bubble, {
             scale: 1,
             scaleX: 1,
@@ -115,15 +111,18 @@ function startBubbleMode(index) {
             clearProps: "all"
         });
 
-        // Plopp-In Effekt beim Erscheinen
+        // Plopp-In Effekt beim Erscheinen der Bubble
         gsap.from(bubble, { scale: 0, duration: 0.6, ease: "back.out(1.7)" });
     }
+
+    // Bedienhinweis wieder einblenden
+    gsap.set("#interaction-hint", { opacity: 0.4, display: "block" });
 
     maxDistance = 0;
     flashActive = false;
 }
 
-// --- 5. Touch & Interaktion ---
+//Interaktion 
 function handleTouchStart(e) {
     // Interaktion nur bei genau 2 Fingern
     if (e.touches.length !== 2 || flashActive) return;
@@ -141,6 +140,9 @@ function handleTouchStart(e) {
 function handleTouchMove(e) {
     if (e.touches.length !== 2 || flashActive || !bubble) return;
 
+    // Bedienhinweis ausblenden, wenn Interaktion startet
+    gsap.to("#interaction-hint", { opacity: 0, duration: 0.3 });
+
     const currentDist = Math.hypot(
         e.touches[0].clientX - e.touches[1].clientX,
         e.touches[0].clientY - e.touches[1].clientY
@@ -154,19 +156,19 @@ function handleTouchMove(e) {
     // Exponentieller Widerstand für haptisches Gefühl
     ratio = Math.pow(ratio, 1.5);
 
-    // --- Visuelle Verformung ---
+    //Visuelle Verformung
     const sX = 1 + (ratio * 0.4); // Dehnen
     const sY = 1 - (ratio * 0.2); // Flach drücken
     const rot = ratio * 12;      // Leichte Neigung
 
     bubble.style.transform = `scaleX(${sX}) scaleY(${sY}) rotate(${rot}deg)`;
 
-    // --- Feedback ---
+    //Feedback
     if (ratio > 0.1 && "vibrate" in navigator) {
         navigator.vibrate(ratio * 20);
     }
 
-    // --- Zerplatzen-Check ---
+    //Zerplatzen checken
     if (ratio >= 0.95) {
         handleFlash();
     }
@@ -177,7 +179,7 @@ function handleTouchMove(e) {
 function handleTouchEnd() {
     if (flashActive) return;
 
-    // Sanftes Zurückschnappen mit Elastic-Effekt
+    //Zurückschnappen der Bubble, wenn losgelassen
     gsap.to(bubble, {
         scaleX: 1,
         scaleY: 1,
@@ -191,7 +193,10 @@ function handleFlash() {
     if (flashActive) return;
     flashActive = true;
 
-    // AUDIO-REAKTIVIERUNG: Ganz wichtig für Mobile, damit der Sound nicht blockiert wird
+    // Bedienhinweis verbergen
+    gsap.set("#interaction-hint", { display: "none" });
+
+    // Audio reaktivieren, damit Sound nicht blockiert wird 
     if (audioCtx.state === 'suspended') {
         audioCtx.resume();
     }
@@ -200,7 +205,7 @@ function handleFlash() {
     const figmaPurple = getComputedStyle(document.documentElement)
         .getPropertyValue('--primary-purple').trim();
 
-    // SOUND SOFORT AUSLÖSEN
+    //sound auslösen
     playSound('pop');
 
     // Haptik

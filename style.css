@@ -1,7 +1,6 @@
-/* --- 1. Variablen & Basis-Setup --- */
+/*Variablen*/
 :root {
     --primary-purple: #6b59c8;
-    /* Das Lila aus deinem Figma */
     --bg-light: #f8f9fa;
     --text-dark: #000000;
     --font-outfit: 'Outfit', sans-serif;
@@ -10,7 +9,6 @@
 * {
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
-    /* Verhindert blauen Kasten beim Klicken auf Mobile */
 }
 
 body {
@@ -26,12 +24,11 @@ body {
     justify-content: center;
     align-items: center;
     touch-action: none;
-    /* Wichtig: Deaktiviert Standard-Browser-Gesten */
     user-select: none;
     -webkit-user-select: none;
 }
 
-/* --- 2. Hintergrund-Design (Ambient Light) --- */
+/*Hintergrund*/
 #background-ambient {
     position: fixed;
     top: 0;
@@ -52,7 +49,7 @@ body {
     position: relative;
 }
 
-/* --- 3. Auswahlbildschirm (Themen) --- */
+/*Themenauswahl*/
 #selection-screen {
     display: flex;
     flex-direction: column;
@@ -97,7 +94,6 @@ body {
     color: white;
     border: none;
     border-radius: 50px;
-    /* Voll abgerundete Ecken wie in Figma */
     padding: 1.3rem;
     font-family: var(--font-outfit);
     font-size: 1rem;
@@ -113,17 +109,15 @@ body {
     background-color: #222;
 }
 
-/* --- 4. Bubble-Interaktion --- */
+/*Interaktion Bubble*/
 #bubble-container {
     position: absolute;
     top: 50%;
     left: 50%;
-    /* Fixe Zentrierung über transform, damit JS diese nicht überschreibt */
     transform: translate(-50%, -50%);
     width: 80vmin;
     height: 80vmin;
     display: none;
-    /* Wird via JS auf 'flex' gesetzt */
     justify-content: center;
     align-items: center;
     z-index: 10;
@@ -135,7 +129,6 @@ body {
     background: white;
     border-radius: 50%;
     border: 1px solid rgba(157, 141, 241, 0.3);
-    /* Subtiler Glow-Effekt aus Figma */
     box-shadow: 0 0 60px rgba(157, 141, 241, 0.15),
         inset 0 0 30px rgba(157, 141, 241, 0.05);
 
@@ -156,10 +149,8 @@ body {
     margin: 0;
     color: var(--text-dark);
     pointer-events: none;
-    /* Klicks gehen durch den Text hindurch auf die Bubble */
 }
 
-/* --- 5. Spezialeffekte --- */
 .flash-state {
     background-color: var(--primary-purple) !important;
     border: none !important;
@@ -171,15 +162,41 @@ body {
     top: 0;
     left: 0;
     width: 100vw;
-    /* Wichtig: Volle Breite */
     height: 100vh;
-    /* Wichtig: Volle Höhe */
     background-color: var(--primary-purple);
     z-index: 9999;
-    /* Ganz nach oben */
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
     margin: 0;
     padding: 0;
+}
+
+#interaction-hint {
+    position: absolute;
+    bottom: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-dark);
+    opacity: 0.4;
+    white-space: nowrap;
+    pointer-events: none;
+    animation: pulseHint 2s infinite ease-in-out;
+}
+
+@keyframes pulseHint {
+
+    0%,
+    100% {
+        opacity: 0.3;
+        transform: translate(-50%, 0);
+    }
+
+    50% {
+        opacity: 0.6;
+        transform: translate(-50%, 5px);
+    }
 }
