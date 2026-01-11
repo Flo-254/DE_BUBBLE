@@ -173,7 +173,6 @@ function handleTouchEnd() {
     });
 }
 
-// --- 6. Finale Animation ---
 function handleFlash() {
     if (flashActive) return;
     flashActive = true;
@@ -181,36 +180,40 @@ function handleFlash() {
     const flashOverlay = document.getElementById('fullscreen-flash');
     playSound('pop');
 
-    if (bubble) bubble.classList.add("flash-state");
+    // Haptisches Feedback
     if ("vibrate" in navigator) navigator.vibrate([50, 30, 200]);
 
+    // GSAP Timeline für präzises Timing
     const tl = gsap.timeline({
         onComplete: () => {
-            // Nach dem Flash zurück zum Start
-            setTimeout(loadSelectionScreen, 500);
+            // Erst wenn der Flash fast vorbei ist, laden wir den Screen neu
+            setTimeout(loadSelectionScreen, 400);
         }
     });
 
-    // 1. Bubble bläht sich kurz auf
+    // 1. Die Bubble "bläht" sich extrem schnell auf
     tl.to(bubble, {
-        scale: 1.5,
+        scale: 1.8,
         duration: 0.1,
-        ease: "power2.out"
+        ease: "expo.out"
     });
 
-    // 2. DER BLITZ: Bildschirm wird lila
+    // 2. DER BLITZ: Er muss EXAKT jetzt kommen
+    // Wir setzen opacity sofort auf 1 (Dauer 0)
     tl.to(flashOverlay, {
         opacity: 1,
         duration: 0.05,
-    }, "-=0.05"); // Startet zeitgleich mit dem Ende des Aufblähens
+        backgroundColor: "#9d8df1" // Hier dein Figma-Lila
+    }, "-=0.05");
 
-    // 3. Bubble verschwindet sofort
+    // 3. Bubble unsichtbar machen, während der Blitz alles verdeckt
     tl.set(bubble, { opacity: 0 });
+    tl.set(bubbleText, { opacity: 0 });
 
-    // 4. Flash blendet langsam aus
+    // 4. Der lila Blitz blendet langsam aus (Nachleuchten)
     tl.to(flashOverlay, {
         opacity: 0,
-        duration: 0.8,
+        duration: 1.2, // Etwas länger für einen schöneren Effekt
         ease: "power2.inOut"
     });
 }
