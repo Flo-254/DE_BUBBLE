@@ -191,16 +191,22 @@ function handleFlash() {
     if (flashActive) return;
     flashActive = true;
 
-    const flashOverlay = document.getElementById('fullscreen-flash');
+    // AUDIO-REAKTIVIERUNG: Ganz wichtig für Mobile, damit der Sound nicht blockiert wird
+    if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
 
-    // Wir holen uns die Farbe direkt aus deinem CSS
+    const flashOverlay = document.getElementById('fullscreen-flash');
     const figmaPurple = getComputedStyle(document.documentElement)
         .getPropertyValue('--primary-purple').trim();
 
+    // SOUND SOFORT AUSLÖSEN
     playSound('pop');
+
+    // Haptik
     if ("vibrate" in navigator) navigator.vibrate([50, 30, 200]);
 
-    // Vorbereitung: Overlay auf deine Farbe setzen
+    // Visueller Ablauf
     gsap.set(flashOverlay, {
         visibility: "visible",
         opacity: 0,
@@ -209,26 +215,21 @@ function handleFlash() {
 
     const tl = gsap.timeline();
 
-    // 1. Bubble bläht sich auf
     tl.to(bubble, {
         scale: 1.8,
         duration: 0.1,
         ease: "power2.out"
     });
 
-    // 2. DER BLITZ: Deckkraft schießt auf 1
     tl.to(flashOverlay, {
         opacity: 1,
-        duration: 0.05, // Ultraschnell
+        duration: 0.05,
     }, "-=0.05");
 
-    // 3. HARD RESET: Bubble und Text sofort weg
     tl.set([bubble, bubbleText], { opacity: 0 });
 
-    // 4. STANDBILD: Der lila Schirm bleibt kurz voll sichtbar (WICHTIG!)
     tl.to({}, { duration: 0.5 });
 
-    // 5. Ausblenden
     tl.to(flashOverlay, {
         opacity: 0,
         duration: 0.8,
