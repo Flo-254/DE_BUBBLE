@@ -1,127 +1,75 @@
-/* Globale Variablen und Reset */
 :root {
-    --color-lavender: #acacda;
-    --font-outfit-semibold: 'Outfit', sans-serif;
-    --color-text-bubble: black;
+    --primary-purple: #9d8df1;
+    /* Das Lila aus deinem Figma */
+    --bg-light: #f8f9fa;
+    --text-dark: #000000;
+    --font-outfit: 'Outfit', sans-serif;
 }
 
 body {
-    background-color: black;
-    color: white;
-    font-family: var(--font-outfit-semibold);
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+    font-family: var(--font-outfit);
     margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
     overflow: hidden;
-    user-select: none;
     touch-action: none;
-    /* Deaktiviert Browser-Gesten */
 }
 
-/* Haupt-App-Container (Zentriert  Bubble ODER  Selection Screen) */
-#app-container {
+/* Der weiche Hintergrund-Verlauf aus Figma */
+#background-ambient {
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-#selection-screen {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100vh;
-    text-align: center;
-    padding: 2rem;
-    box-sizing: border-box;
+    background: radial-gradient(circle at 80% 20%, rgba(157, 141, 241, 0.15), transparent 40%),
+        radial-gradient(circle at 10% 80%, rgba(157, 141, 241, 0.1), transparent 40%);
+    z-index: -1;
 }
 
 #selection-screen h2 {
-    font-size: 8vmin;
-    margin-bottom: 2rem;
-    color: white;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 1.5rem;
 }
 
-#theme-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    /* Abstand zwischen den Buttons */
-    width: 90%;
-    /* Buttons nehmen fast die ganze Breite ein */
-    max-width: 400px;
-    /* Begrenzung für große Tablets/Desktops */
-}
-
+/* Schwarze Buttons wie in Figma */
 #theme-buttons button {
-    /* Größe und Styling */
-    padding: 1rem 1.5rem;
-    min-height: 60px;
-    font-family: var(--font-outfit-semibold);
-    font-size: 5vmin;
+    background-color: var(--text-dark);
+    color: white;
+    border-radius: 30px;
+    /* Voll abgerundet */
+    padding: 1.2rem;
+    font-size: 1rem;
     font-weight: 600;
-
-    /* Visuelles Design */
-    background-color: var(--color-lavender);
-    color: var(--color-text-bubble);
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-
-    /* Schatten für 3D-Effekt */
-    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.2);
-    transition: all 0.1s ease-out;
+    text-transform: uppercase;
+    box-shadow: none;
+    transition: transform 0.2s ease;
 }
 
-/* Effekt beim Antippen (Active State) */
 #theme-buttons button:active {
-    transform: translateY(2px);
-    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2);
+    transform: scale(0.95);
+    background-color: #333;
 }
 
-/* Bubble Container (Definiert die max. Größe der Bubble) */
-#bubble-container {
-    width: 75vmin;
-    height: 75vmin;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* Die Bubble selbst */
+/* Die Bubble-Optik: Weiß, lila Schein, feine Linie */
 #bubble {
-    width: 100%;
-    height: 100%;
-    background-color: white;
-    color: var(--color-text-bubble);
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    position: relative;
-    transition: box-shadow 0.1s;
-    /* Für sanften Übergang zum Flash */
+    background: white;
+    border: 1px solid rgba(157, 141, 241, 0.3);
+    box-shadow: 0 0 40px rgba(157, 141, 241, 0.2),
+        inset 0 0 20px rgba(157, 141, 241, 0.1);
+    color: var(--text-dark);
 }
 
 #bubble-text {
-    font-size: 6vmin;
     font-weight: 600;
-    padding: 10%;
-    margin: 0;
-    line-height: 1.1;
-    white-space: normal;
-    transform-origin: center center;
+    font-size: 1.2rem;
+    max-width: 80%;
 }
 
+/* Flash-State Anpassung */
 .flash-state {
-    background-color: var(--color-lavender) !important;
-    color: white !important;
-    box-shadow: 0 0 50px var(--color-lavender);
-    /* Leuchtender Effekt */
+    background-color: var(--primary-purple) !important;
+    box-shadow: 0 0 100px var(--primary-purple);
 }

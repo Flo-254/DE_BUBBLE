@@ -1,32 +1,42 @@
 <!DOCTYPE html>
+
 <html lang="de">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>DE.BUBBLE Interaktion</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="style.css">
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+
 </head>
 
 <body>
-    <div id="selection-screen">
-        <h2>Wähle ein Thema</h2>
-        <div id="theme-buttons">
+    <div id="app-container">
+        <div id="background-ambient"></div>
+        <div id="selection-screen">
+            <h1 style="font-weight:800; margin-bottom: 2rem;">DE<span style="color:var(--primary-purple)">.</span>BUBBLE
+            </h1>
+            <h2>Wähle ein Thema</h2>
+            <div id="theme-buttons"></div>
         </div>
     </div>
-    <div id="app-container">
-        <div id="bubble-container">
-            <div id="bubble">
-                <p id="bubble-text">Ich brauche keine Verbote.</p>
-            </div>
+    <div id="bubble-container">
+        <div id="bubble">
+            <p id="bubble-text">
+            </p>
         </div>
+    </div>
     </div>
 
     <script src="script.js"></script>
+
+
 </body>
 
 </html>
