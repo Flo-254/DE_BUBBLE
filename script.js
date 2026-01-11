@@ -178,25 +178,39 @@ function handleFlash() {
     if (flashActive) return;
     flashActive = true;
 
+    const flashOverlay = document.getElementById('fullscreen-flash');
     playSound('pop');
+
     if (bubble) bubble.classList.add("flash-state");
-    if ("vibrate" in navigator) navigator.vibrate([50, 30, 100]);
+    if ("vibrate" in navigator) navigator.vibrate([50, 30, 200]);
 
     const tl = gsap.timeline({
         onComplete: () => {
-            setTimeout(loadSelectionScreen, 1000);
+            // Nach dem Flash zurück zum Start
+            setTimeout(loadSelectionScreen, 500);
         }
     });
 
+    // 1. Bubble bläht sich kurz auf
     tl.to(bubble, {
-        scale: 1.4,
+        scale: 1.5,
         duration: 0.1,
         ease: "power2.out"
-    })
-        .to(bubble, {
-            scale: 0,
-            opacity: 0,
-            duration: 0.2,
-            ease: "power3.in"
-        });
+    });
+
+    // 2. DER BLITZ: Bildschirm wird lila
+    tl.to(flashOverlay, {
+        opacity: 1,
+        duration: 0.05,
+    }, "-=0.05"); // Startet zeitgleich mit dem Ende des Aufblähens
+
+    // 3. Bubble verschwindet sofort
+    tl.set(bubble, { opacity: 0 });
+
+    // 4. Flash blendet langsam aus
+    tl.to(flashOverlay, {
+        opacity: 0,
+        duration: 0.8,
+        ease: "power2.inOut"
+    });
 }
