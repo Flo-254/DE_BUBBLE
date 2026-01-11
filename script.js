@@ -64,6 +64,7 @@ function startBubbleMode(index) {
     if (selectionScreen) selectionScreen.style.display = "none";
     if (bubbleContainer) {
         bubbleContainer.style.display = "flex";
+        // WICHTIG: Hier berechnen wir die Breite neu, wenn sie sichtbar wird
         initialWidth = bubbleContainer.offsetWidth;
     }
 
@@ -71,8 +72,18 @@ function startBubbleMode(index) {
         bubbleText.textContent = THEMES[index].statement;
     }
 
-    // Reset Bubble Styles
-    gsap.set(bubble, { scale: 1, rotation: 0, opacity: 1, clearProps: "all" });
+    // RESET: Hier zwingen wir die Bubble, wieder rund und unverformt zu sein
+    if (bubble) {
+        bubble.style.transform = "scaleX(1) scaleY(1) rotate(0deg)";
+        bubble.style.opacity = "1";
+    }
+
+    // Alle Touch-Daten zurücksetzen
+    activeTouches = {};
+    maxDistance = 0;
+    flashActive = false;
+
+    gsap.from(bubble, { scale: 0, duration: 0.5, ease: "back.out(1.7)" });
 }
 
 // --- Touch Logik ---
