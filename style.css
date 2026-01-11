@@ -174,13 +174,10 @@ body {
     height: 100vh;
     background-color: var(--primary-purple);
     z-index: 9999;
-    /* Über allem anderen */
     opacity: 0;
+    visibility: hidden;
+    /* NEU: Verhindert, dass es existiert, wenn nicht aktiv */
     pointer-events: none;
-    /* Stört die Touch-Events nicht */
-}
-
-/* Hilfsklasse zum Ausblenden */
-.hidden {
-    display: none !important;
+    transition: visibility 0s 1.2s;
+    /* Wartet, bis Animation vorbei ist */
 }

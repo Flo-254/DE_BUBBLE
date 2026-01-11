@@ -88,6 +88,10 @@ function loadSelectionScreen() {
 }
 
 function startBubbleMode(index) {
+
+    gsap.killTweensOf(["#bubble", "#bubble-text", "#fullscreen-flash"]);
+    gsap.set("#fullscreen-flash", { opacity: 0, visibility: "hidden" });
+
     if (selectionScreen) selectionScreen.style.display = "none";
     if (bubbleContainer) {
         bubbleContainer.style.display = "flex";
@@ -190,40 +194,39 @@ function handleFlash() {
     const flashOverlay = document.getElementById('fullscreen-flash');
     playSound('pop');
 
-    // Haptisches Feedback
     if ("vibrate" in navigator) navigator.vibrate([50, 30, 200]);
 
-    // GSAP Timeline für präzises Timing
+    // Flash vorbereiten
+    gsap.set(flashOverlay, { visibility: "visible", opacity: 0 });
+
     const tl = gsap.timeline({
         onComplete: () => {
-            // Erst wenn der Flash fast vorbei ist, laden wir den Screen neu
-            setTimeout(loadSelectionScreen, 400);
+            // Reset Overlay für die nächste Runde
+            gsap.set(flashOverlay, { visibility: "hidden" });
+            loadSelectionScreen();
         }
     });
 
-    // 1. Die Bubble "bläht" sich extrem schnell auf
+    // 1. Aufblähen
     tl.to(bubble, {
         scale: 1.8,
         duration: 0.1,
         ease: "expo.out"
     });
 
-    // 2. DER BLITZ: Er muss EXAKT jetzt kommen
-    // Wir setzen opacity sofort auf 1 (Dauer 0)
+    // 2. Blitz an (Lila wird sichtbar)
     tl.to(flashOverlay, {
         opacity: 1,
-        duration: 0.05,
-        backgroundColor: "#9d8df1" // Hier dein Figma-Lila
+        duration: 0.05
     }, "-=0.05");
 
-    // 3. Bubble unsichtbar machen, während der Blitz alles verdeckt
-    tl.set(bubble, { opacity: 0 });
-    tl.set(bubbleText, { opacity: 0 });
+    // 3. Elemente im Hintergrund resetten (während lila alles verdeckt)
+    tl.set([bubble, bubbleText], { opacity: 0 });
 
-    // 4. Der lila Blitz blendet langsam aus (Nachleuchten)
+    // 4. Blitz ausblenden
     tl.to(flashOverlay, {
         opacity: 0,
-        duration: 1.2, // Etwas länger für einen schöneren Effekt
+        duration: 1.0,
         ease: "power2.inOut"
     });
 }
