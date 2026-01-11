@@ -37,6 +37,12 @@ document.addEventListener("DOMContentLoaded", () => {
     loadSelectionScreen();
 });
 
+button.addEventListener("click", () => {
+    if (audioCtx.state === 'suspended') audioCtx.resume(); // Browser-Sicherheit aktivieren
+    playBubbleSound();
+    startBubbleMode(index);
+});
+
 // --- Navigation & UI ---
 function loadSelectionScreen() {
     flashActive = false;
@@ -164,6 +170,8 @@ function handleFlash() {
     if (flashActive) return;
     flashActive = true;
 
+    playPopSound();
+
     if (bubble) bubble.classList.add("flash-state");
     if ("vibrate" in navigator) navigator.vibrate([50, 30, 100]); // Explosions-Vibration
 
@@ -193,4 +201,44 @@ function resetAfterFlash() {
     setTimeout(() => {
         loadSelectionScreen();
     }, 1500);
+}
+
+// Audio Kontext initialisieren
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+function playBubbleSound() {
+    const oscillator = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+
+    oscillator.type = 'sine';
+    oscillator.frequency.setValueAtTime(400, audioCtx.currentTime);
+    oscillator.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.1);
+
+    gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+
+    oscillator.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+
+    oscillator.start();
+    oscillator.stop(audioCtx.currentTime + 0.1);
+}
+
+function playPopSound() {
+    const oscillator = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+
+    oscillator.type = 'sine';
+    // Tieferer Startton für den Plopp
+    oscillator.frequency.setValueAtTime(150, audioCtx.currentTime);
+    oscillator.frequency.exponentialRampToValueAtTime(10, audioCtx.currentTime + 0.3);
+
+    gainNode.gain.setValueAtTime(0.4, audioCtx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+
+    oscillator.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+
+    oscillator.start();
+    oscillator.stop(audioCtx.currentTime + 0.3);
 }
