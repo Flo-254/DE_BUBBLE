@@ -96,11 +96,21 @@ function startBubbleMode(index) {
 
     if (bubbleText) {
         bubbleText.textContent = THEMES[index].statement;
+        // FIX: Sicherstellen, dass der Text wieder voll sichtbar ist
+        gsap.set(bubbleText, { opacity: 1 });
     }
 
-    // Reset der Bubble-Animationen
     if (bubble) {
-        gsap.set(bubble, { scale: 1, scaleX: 1, scaleY: 1, rotation: 0, opacity: 1, clearProps: "all" });
+        // FIX: Wir setzen opacity: 1 und löschen alle alten Animations-Reste
+        gsap.set(bubble, {
+            scale: 1,
+            scaleX: 1,
+            scaleY: 1,
+            rotation: 0,
+            opacity: 1,
+            clearProps: "all"
+        });
+
         // Plopp-In Effekt beim Erscheinen
         gsap.from(bubble, { scale: 0, duration: 0.6, ease: "back.out(1.7)" });
     }
