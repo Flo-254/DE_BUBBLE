@@ -171,11 +171,15 @@ body {
     top: 0;
     left: 0;
     width: 100vw;
+    /* Wichtig: Volle Breite */
     height: 100vh;
+    /* Wichtig: Volle Höhe */
     background-color: var(--primary-purple);
-    /* Nutzt dein Figma-Lila */
     z-index: 9999;
+    /* Ganz nach oben */
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
+    margin: 0;
+    padding: 0;
 }

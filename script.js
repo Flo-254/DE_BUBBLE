@@ -193,46 +193,49 @@ function handleFlash() {
 
     const flashOverlay = document.getElementById('fullscreen-flash');
 
-    // Sound und Vibration sofort
+    // Wir holen uns die Farbe direkt aus deinem CSS
+    const figmaPurple = getComputedStyle(document.documentElement)
+        .getPropertyValue('--primary-purple').trim();
+
     playSound('pop');
     if ("vibrate" in navigator) navigator.vibrate([50, 30, 200]);
 
-    // 1. Vorbereitung: Overlay sichtbar machen (noch transparent)
+    // Vorbereitung: Overlay auf deine Farbe setzen
     gsap.set(flashOverlay, {
         visibility: "visible",
         opacity: 0,
-        backgroundColor: "#9d8df1" // Das kräftige Lila
+        backgroundColor: figmaPurple
     });
 
     const tl = gsap.timeline();
 
-    // 2. Bubble bläht sich auf
+    // 1. Bubble bläht sich auf
     tl.to(bubble, {
         scale: 1.8,
-        duration: 0.15,
+        duration: 0.1,
         ease: "power2.out"
     });
 
-    // 3. DER BLITZ: Er schießt rein und bleibt kurz stehen
+    // 2. DER BLITZ: Deckkraft schießt auf 1
     tl.to(flashOverlay, {
         opacity: 1,
-        duration: 0.1, // Schneller Blitz
+        duration: 0.05, // Ultraschnell
     }, "-=0.05");
 
-    // 4. Bubble und Text sofort verstecken, wenn alles lila ist
+    // 3. HARD RESET: Bubble und Text sofort weg
     tl.set([bubble, bubbleText], { opacity: 0 });
 
-    // 5. Kurze Pause im lila Zustand (damit man es sieht!)
-    tl.to({}, { duration: 0.3 });
+    // 4. STANDBILD: Der lila Schirm bleibt kurz voll sichtbar (WICHTIG!)
+    tl.to({}, { duration: 0.5 });
 
-    // 6. Flash blendet aus und erst DANN laden wir den Startscreen
+    // 5. Ausblenden
     tl.to(flashOverlay, {
         opacity: 0,
         duration: 0.8,
         ease: "power2.inOut",
         onComplete: () => {
             gsap.set(flashOverlay, { visibility: "hidden" });
-            loadSelectionScreen(); // Erst hier zurückkehren!
+            loadSelectionScreen();
         }
     });
 }
