@@ -192,41 +192,47 @@ function handleFlash() {
     flashActive = true;
 
     const flashOverlay = document.getElementById('fullscreen-flash');
-    playSound('pop');
 
+    // Sound und Vibration sofort
+    playSound('pop');
     if ("vibrate" in navigator) navigator.vibrate([50, 30, 200]);
 
-    // Flash vorbereiten
-    gsap.set(flashOverlay, { visibility: "visible", opacity: 0 });
-
-    const tl = gsap.timeline({
-        onComplete: () => {
-            // Reset Overlay für die nächste Runde
-            gsap.set(flashOverlay, { visibility: "hidden" });
-            loadSelectionScreen();
-        }
+    // 1. Vorbereitung: Overlay sichtbar machen (noch transparent)
+    gsap.set(flashOverlay, {
+        visibility: "visible",
+        opacity: 0,
+        backgroundColor: "#9d8df1" // Das kräftige Lila
     });
 
-    // 1. Aufblähen
+    const tl = gsap.timeline();
+
+    // 2. Bubble bläht sich auf
     tl.to(bubble, {
         scale: 1.8,
-        duration: 0.1,
-        ease: "expo.out"
+        duration: 0.15,
+        ease: "power2.out"
     });
 
-    // 2. Blitz an (Lila wird sichtbar)
+    // 3. DER BLITZ: Er schießt rein und bleibt kurz stehen
     tl.to(flashOverlay, {
         opacity: 1,
-        duration: 0.05
+        duration: 0.1, // Schneller Blitz
     }, "-=0.05");
 
-    // 3. Elemente im Hintergrund resetten (während lila alles verdeckt)
+    // 4. Bubble und Text sofort verstecken, wenn alles lila ist
     tl.set([bubble, bubbleText], { opacity: 0 });
 
-    // 4. Blitz ausblenden
+    // 5. Kurze Pause im lila Zustand (damit man es sieht!)
+    tl.to({}, { duration: 0.3 });
+
+    // 6. Flash blendet aus und erst DANN laden wir den Startscreen
     tl.to(flashOverlay, {
         opacity: 0,
-        duration: 1.0,
-        ease: "power2.inOut"
+        duration: 0.8,
+        ease: "power2.inOut",
+        onComplete: () => {
+            gsap.set(flashOverlay, { visibility: "hidden" });
+            loadSelectionScreen(); // Erst hier zurückkehren!
+        }
     });
 }
